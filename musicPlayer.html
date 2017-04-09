@@ -1,0 +1,378 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
+		<meta name="author" content="" />
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<title> new document </title>
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<style>
+			*{
+				margin:0px;
+				padding:0px;
+				font:12px/1.5 Microsoft YaHei;
+			}
+			#app{
+				width:600px;
+				height:400px;
+				border:1px solid #aaa;
+				border-radius:10px;
+				position:relative;
+				overflow:hidden;
+			}
+			#main-content{
+				position:absolute;
+				width:80%;
+				height:80%;
+				left:0;
+				top:0;
+				background:red url() no-repeat scroll
+			}
+			#channelList{
+				position:absolute;
+				right:0;
+				top:0;
+				width:20%;
+				height:80%;
+				overflow:auto;
+			}
+			#channelList ul li{
+				height:30px;
+				line-height:30px;
+				list-style:none;
+				text-align:center;
+				border-bottom:1px dashed #ddd;
+				margin:4px 10%;
+				cursor:pointer;
+			}
+			#control{
+				width:100%;
+				height:20%;
+				background-color:#33ccff;
+				position:absolute;
+				bottom:0;
+				left:0;
+			}
+			#progressBar{
+				position:absolute;
+				top:0;
+				width:100%;
+				height:4px;
+				margin:0 auto;
+			}
+			#front{
+				width:100px;
+				height:100%;
+				background-color:white;
+				position:absolute;
+				z-index:6;
+			}
+			#back{
+				width:100%;
+				height:100%;
+				background-color:rgba(200,200,200,0.8);
+				position:absolute;
+				z-index:5;
+			}
+			#pointer{
+				height:10px;
+				width:10px;
+				background-color:black;
+				position:absolute;
+				top:-2px;
+				z-index:7;
+				border-radius:50%;
+			}
+			#controlContainer{
+				text-align:center;
+				width:100%;
+				height:50%;
+				line-height:100%;
+				margin:20px auto;
+				position:relative;
+			}
+			#last{
+				width:40px;
+				height:40px;
+				cursor:pointer;
+				display:inline-block;
+				vertical-align:middle;
+			}
+			#next{
+				width:40px;
+				height:40px;
+				cursor:pointer;
+				display:inline-block;
+				vertical-align:middle;
+			}
+			#play-pause{
+				width:50px;
+				height:50px;
+				display:inline-block;
+				margin:0 40px;
+				cursor:pointer;
+				vertical-align:middle;
+			}
+			#loop{
+				position:absolute;
+				right:0;
+				bottom:0;
+				margin:10px;
+				cursor:pointer;
+			}
+			#volume{
+				position:absolute;
+				right:160px;
+				top:35px;
+			}
+			#volume-front{
+				width:100px;
+				height:4px;
+				background-color:green;
+				position:absolute;
+				left:24px;
+				top:10px;
+				z-index:4;
+			}
+			#volume-back{
+				width:100px;
+				height:4px;
+				background-color:red;
+				position:absolute;
+				left:24px;
+				top:10px;
+				z-index:3;
+			}
+			#volume-pointer{
+				width:8px;
+				height:8px;
+				background-color:blue;
+				border-radius:50%;
+				position:absolute;
+				right:-10px;
+				top:8px;
+				z-index:5;
+			}
+			#title{
+				position:absolute;
+				top:20px;
+				left:10px;
+				font-size:24px;
+				font-weight:bold;
+			}
+			#lyric{
+				width:80%;
+				word-wrap: break-word;
+				overflow:hidden;
+				margin:10px auto;
+				text-align:center;
+			}
+			#timeContainer{
+				position:absolute;
+				left:0;
+				bottom:0;
+				margin:10px
+			}
+			#timeContainer span{
+				line-height:20px;
+				margin:2px;
+				color:white;
+				font-weight:bold;
+			}
+		</style>
+	</head>
+	<body>
+	<div id="app">
+		<div id="main-content">
+			
+			<div id="lyric">
+				
+			</div>
+			
+		</div>
+		<div id="control">
+			<div id="progressBar">
+				<div id="front">
+					
+				</div>
+				<div id="back">
+					
+				</div>
+				<div id="pointer">
+					
+				</div>
+			</div>
+			<div id="controlContainer">
+				<div id="last">
+					<i class="fa fa-step-backward fa-3x"></i>
+				</div>
+				<div id="play-pause">
+					<i class="fa fa-play fa-4x"></i>
+				</div>
+
+				<div id="next">
+					<i class="fa fa-step-forward fa-3x"></i>
+				</div>
+			</div>
+			<div id="loop">
+				<i class="fa fa-random fa-2x"></i>
+			</div>
+			<div id="volume">
+				<i class="fa fa-volume-up fa-2x"></i>
+				<div id="volume-front"></div>
+				<div id="volume-back"></div>
+				<div id="volume-pointer"></div>
+			</div>
+			<div id="timeContainer">
+				<span id="currentTime">0000</span>
+				<span>|</span>
+				<span id="totalTime">0000</span>
+			</div>
+			<h1 id="title">
+				titel
+			</h1>
+		</div>
+		<div id="channelList">
+			<ul>
+			</ul>
+		</div>
+		<audio src="" controls=true style="position:absolute;z-index:999999;"></audio>
+
+	</div>
+	<script type="text/javascript">
+
+		FMMusicPlayer = {
+			channelList : '',
+			playingChannel : 'public_fengge_dianyingyuansheng',
+			init : function(node){
+				this.target = node
+				this.getChannel()
+				this.getSong()
+				this.play_pause()
+				
+			},
+			
+			//moduel
+			getChannel : function(){
+				var that = this
+				var xhr = new XMLHttpRequest()
+				xhr.open('GET','http://api.jirengu.com/fm/getChannels.php',true)
+				xhr.send(null)
+				xhr.onreadystatechange = function(){
+					if (xhr.readyState === 4) {
+						if (xhr.status === 200) {
+							that.channelList = JSON.parse(xhr.response)
+							that.renderChannel()
+						} else {
+							console.log(xhr.status)
+						}
+					}
+				}
+			},
+
+			renderChannel : function(){
+				var tem , i
+				var that = this
+				var data = this.channelList
+				var template = document.createElement('li')
+				for (i in data.channels ){
+					template.innerHTML = ''
+					template.innerHTML += data.channels[i].name
+					
+					tem = template.cloneNode(true);
+					
+					(function(i,container){
+						container.onclick = function(){
+							that.playingChannel = data.channels[i].channel_id
+							that.getSong()
+							console.log(data.channels[i])
+						}
+					}(i,tem))
+
+					document.getElementById('channelList').getElementsByTagName('ul')[0].appendChild(tem)
+				}
+			},
+
+			getSong : function(){
+				var that = this
+				var xhr = new XMLHttpRequest()
+				xhr.open('GET','http://api.jirengu.com/fm/getSong.php?channel='+this.playingChannel,true)
+				xhr.send(null)
+				xhr.onreadystatechange = function(){
+					if (xhr.readyState === 4) {
+						if (xhr.status === 200) {
+							(function(data){
+								data = JSON.parse(data)
+								that.renderSong(data)
+								that.getLyric(data)
+							}(xhr.response))
+						} else {
+							console.log(xhr.status)
+						}
+					}
+				}
+			},
+
+			getLyric : function(data){
+				var xhr = new XMLHttpRequest()
+				xhr.open('GET','http://jirenguapi.applinzi.com/fm/getLyric.php?&sid='+data.song[0].sid,true)
+				xhr.send(null)
+				xhr.onreadystatechange = function(){
+					if (xhr.readyState === 4) {
+						if (xhr.status === 200) {
+							(function(data){
+								data = JSON.parse(data)
+							}(xhr.response))
+						} else {
+							console.log(xhr.status)
+						}
+					}
+				}
+			},
+
+			status : 'play',
+
+			renderSong : function(data){
+				var tar = document.getElementsByTagName('audio')[0]
+				tar.src = data.song[0].url
+				tar.autoplay = true
+				tar.volume = 0.5
+				console.log(data.song[0].url)
+			},
+			
+			rendTime : function(){
+				var currTime
+				var currTimeContainer = document.getElementById('currentTime')
+				var totalTime
+				var totalTimeContainer
+			},
+
+			play_pause : function(){
+				var that = this
+				var play = document.getElementById('play-pause')
+				play.onclick = function(){
+					that.status === 'play' ? that.pause() : that.play()
+				}
+			},
+			
+			play : function(){
+				document.getElementsByTagName('audio')[0].play()
+				this.status = 'play'
+			},
+
+			pause:function(){
+				document.getElementsByTagName('audio')[0].pause()
+				this.status = 'pause'
+			}
+
+		
+		}
+		
+		FMMusicPlayer.init(document.getElementsByTagName('audio'))
+		
+		
+		
+	</script>
+	</body>
+</html>

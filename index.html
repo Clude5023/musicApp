@@ -1,0 +1,330 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
+		<meta name="author" content="" />
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title> new document </title>
+		<style>
+			*{
+				margin:0px;
+				padding:0px;
+				font:12px/1.5 Microsoft YaHei;
+			}
+			a{
+				text-decoration:none;
+			}
+			img{
+				max-width:100%;
+			}
+			li{
+				list-style:none;
+			}
+			.clearfix:after{
+				content:".";
+				display:block;
+				height:0;
+				clear:both;
+				visibility:hidden;
+			}
+			.clearfix{
+				zoom:1
+			}
+			/*site-nav start*/
+			#site-nav{
+				min-width:1230px;
+				height:32px;
+				font-size:16px;
+				background-color:#f2f2f2;
+				border-bottom:1px solid #e5e5e5
+			}
+			#site-nav-container{
+				width:1230px;
+				height:32px;
+				margin:0 auto;
+				position:relative;
+			}
+			#site-nav li{
+				margin:0 5px;
+				line-height:32px;
+				color:#999;
+			}
+			#site-nav a{
+				color:#999
+			}
+			#site-nav a:hover{
+				color:#c40000;
+			}
+			#nav-left{
+				position:absolute;
+				left:0;
+				top:0;
+			}
+			#nav-left li{
+				float:left
+			}
+			#nav-right{
+				position:absolute;
+				right:0;
+				top:0;
+			}
+			#nav-right li{
+				float:right
+			}
+			/*site-nav end*/
+			/*header start*/
+			#header{
+				min-width:1230px;
+				height:130px;
+			}
+			#header img{
+				margin-left:30px;
+			}
+			#search-container{
+				width:625px;
+				height:40px;
+				background-color:#c40000;
+				position:relative;
+				left:330px;
+				top:-90px;
+			}
+			#typeIn{
+				width:486px;
+				height:36px;
+				margin:2px;
+				padding-left:5px;
+				border:none;
+				font-size:16px;
+				color:black
+			}
+			#typeIn:focus{
+				outline:none;
+			}
+			#typeInButton{
+				position:absolute;
+				right:0;
+				top:0;
+				margin:2px;
+				width:132px;
+				height:36px;
+				border:none;
+				background-color:#c40000;
+				color:white;
+				font-size:18px;
+				font-weight:bold;
+				cursor:pointer;
+			}
+			#appSearch ul{
+				display:none;
+				width:489px;
+				border:1px solid #aaa;
+			}
+			#appSearch ul li{
+				height:26px;
+				line-height:26px;
+			}
+			#appSearch ul li:hover{
+				background-color:#c40000;
+			}
+			#appSearch ul li:hover a{
+				color:white
+			}
+			#appSearch ul li a{
+				display:block;
+				margin-left:10px;
+				height:26px;
+				line-height:26px;
+				color:black;
+			}
+			/*header end*/
+			/*catalog start*/
+			#catalog{
+				
+			}
+			#catalog-container{
+				width:1230px;
+				margin:0 auto;
+				position:relative;
+			}
+			#catalog-container ul li{
+				width:200px;
+				height:31px;
+				line-height:31px;
+				background-color:#ccc;
+				font-size:14px;
+			}
+			#catalog-container ul li:hover{
+				background-color:white;
+			}
+			#catalog-container ul li a{
+				line-height:31px;
+				font-size:14px;
+				margin-left:2px;
+			}
+			#catalog-title{
+				position:absolute;
+				top:0;
+				left:0;
+				width:200px;
+				height:36px;
+				line-height:36px;
+				background-color:red;
+			}
+			#catalog-list{
+				position:absolute;
+				top:36px;
+				left:0;
+			}
+			#content-container{
+				position:absolute;
+				left:200px;
+				top:36px;
+				width:825px;
+				height:500px;
+				background-color:green;
+				overflow:hidden;
+			}
+			.hot-word{
+				position:relative;
+				width:511px;
+				background-color:yellow
+			}
+			.title{
+				position:absolute;
+				top:5px;
+				left:5px;
+				width:60px;
+				background-color:red;
+				
+			}
+			.content{
+				float:right;
+				width:418px;
+				background-color:blue;
+				border-bottom:1px dotted #c3c3c3;
+				margin:10px;
+			}
+			/*catalog end*/
+		</style>
+	</head>
+	<body>
+		<div id="site-nav">
+			<div id="site-nav-container">
+				<ul id="nav-left">
+					<li><a href="#">喵，欢迎来天猫</a></li>
+					<li><a href="#">请登录</a></li>
+					<li><a href="#">免费注册</a></li>
+				</ul>
+				<ul id="nav-right">
+					<li><a href="#">我的淘宝</a></li>
+					<li><a href="#">我关注的品牌</a></li>
+					<li><a href="#">购物车</a></li>
+					<li><a href="#">收藏夹</a></li>
+					<li>|</li>
+					<li><a href="#">手机版</a></li>
+					<li><a href="#">淘宝网</a></li>
+					<li><a href="#">企业购</a></li>
+					<li><a href="#">商家支持</a></li>
+					<li><a href="#">网站导航</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="header">
+			<img src="images/logo.png" width="240px" height="130px" alt="" />
+			<div id="search">
+				<div id="search-container">
+					<div id="appSearch">
+						<input type="text" id="typeIn" value="" placeholder="淘你喜欢"/>
+						<input type="button" id="typeInButton" value="搜索"/>
+					<ul>
+					</ul>
+				</div>
+				</div>
+				<div id="">
+					
+				</div>
+			</div>
+		</div>
+		<div id="content">
+			<div id="catalog">
+				<div id="catalog-container">
+					<div id="catalog-title">商品分类</div>
+					<ul id="catalog-list">
+						<li><em></em><a href="#">女装</a>/<a href="#">内衣</a></li>
+						<li><em></em><a href="#">男装</a>/<a href="#">运动户外</a></li>
+						<li><em></em><a href="#">女鞋</a>/<a href="#">男鞋</a>/<a href="#">箱包</a></li>
+						<li><em></em><a href="#">化妆品</a>/<a href="#">个人护理</a></li>
+						<li><em></em><a href="#">腕表</a>/<a href="#">珠宝饰品</a>/<a href="#">眼镜</a></li>
+						<li><em></em><a href="#">手机</a>/<a href="#">数码</a>/<a href="#">电脑办公</a></li>
+						<li><em></em><a href="#">母婴玩具</a></li>
+						<li><em></em><a href="#">零食</a>/<a href="#">进口食品</a>/<a href="#">茶酒</a></li>
+						<li><em></em><a href="#">生鲜水果</a></li>
+						<li><em></em><a href="#">大家电</a>/<a href="#">生活电器</a></li>
+						<li><em></em><a href="#">家具建材</a></li>
+						<li><em></em><a href="#">汽车</a>/<a href="#">配件</a>/<a href="#">用品</a></li>
+						<li><em></em><a href="#">家纺</a>/<a href="#">家饰</a>/<a href="#">鲜花</a></li>
+						<li><em></em><a href="#">医药保健</a></li>
+						<li><em></em><a href="#">厨具</a>/<a href="#">收纳</a>/<a href="#">宠物</a></li>
+						<li><em></em><a href="#">图书音像</a></li>
+					</ul>
+					<div id="content-container">
+						<div class="hot-word clearfix">
+							<div class="title">
+								1
+							</div>
+							<div class="content">
+								12
+							</div>
+						</div>
+						<div class="hot-word clearfix">
+							<div class="title">
+								1
+							</div>
+							<div class="content">
+								12
+							</div>
+						</div>
+						<div class="hot-word clearfix">
+							<div class="title">
+								11111111111111111111111111111
+							</div>
+							<div class="content">
+								<a href="">12121212121212121212121212121212121212121212121212121212</a><a href="">1212121212121212121212121212</a>
+							</div>
+						</div>
+						<div class="shop-pic">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="main-nav">
+				<ul>
+					<li>天猫超市</li>
+					<li>天猫国际</li>
+					<li>天猫会员</li>
+					<li>品牌街</li>
+					<li>电器城</li>
+					<li>喵鲜生</li>
+					<li>医药馆</li>
+					<li>营业厅</li>
+				</ul>
+			</div>
+			<div id="carousel">
+				<ul id="carousel-img">
+					
+				</ul>
+				<ul id="carousel-selector">
+					
+				</ul>
+			</div>
+		</div>
+		<div id="footer"></div>
+		<script type="text/javascript" src="js/tmallSearch.js"></script>
+		<script type="text/javascript">	
+			tmallSearch.init(document.getElementById("appSearch"))
+		</script>
+	</body>
+</html>
