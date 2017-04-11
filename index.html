@@ -393,7 +393,7 @@
 				var currTime
 				var defalut = tar.offsetTop
 				var list = tar.getElementsByTagName('p')
-				clearInterval(timer)
+				window.clearInterval(timer);
 				tar.style.top = 170 + 'px'
 				var timer = setInterval(move,1000)
 				function move(){
@@ -418,7 +418,7 @@
 				var tar = document.getElementsByTagName('audio')[0]
 				tar.src = data.song[0].url
 				tar.autoplay = true
-				tar.volume = 0.5
+				tar.volume = 0.2
 				var title = document.getElementsByTagName('h1')[0]
 				title.innerText = data.song[0].title
 				var background = document.getElementById('main-content')
