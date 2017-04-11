@@ -27,7 +27,8 @@
 				height:80%;
 				left:0;
 				top:0;
-				background:red url() no-repeat scroll
+				background:white url() space scroll center;
+				border-right:1px solid #ccc;
 			}
 			#channelList{
 				position:absolute;
@@ -62,16 +63,16 @@
 				margin:0 auto;
 			}
 			#progress-front{
-				width:100px;
+				width:0px;
 				height:100%;
-				background-color:white;
+				background-color:rgba(170,170,170,1);
 				position:absolute;
 				z-index:6;
 			}
 			#progress-back{
 				width:100%;
 				height:100%;
-				background-color:rgba(200,200,200,0.8);
+				background-color:rgba(230,230,230,0.8);
 				position:absolute;
 				z-index:5;
 			}
@@ -155,19 +156,35 @@
 				top:8px;
 				z-index:5;
 			}
-			#title{
+			h1{
 				position:absolute;
-				top:20px;
+				top:15px;
 				left:10px;
+				width:30%;
+				height:32px;
+				line-height:24px;
 				font-size:24px;
 				font-weight:bold;
+				text-overflow:ellipsis;
+				overflow:hidden;
 			}
 			#lyric{
-				width:80%;
+				position:absolute;
+				top:50%;
+				left:0;
+				width:100%;
 				word-wrap: break-word;
 				overflow:hidden;
 				margin:10px auto;
 				text-align:center;
+			}
+			#lyric p{
+				line-height:18px;
+				margin:10px auto;
+				font-size:18px;
+				color:yellow;
+				-webkit-text-stroke-width:1px;
+				-webkit-text-stroke-color:black;
 			}
 			#timeContainer{
 				position:absolute;
@@ -189,7 +206,6 @@
 		<div id="main-content">
 			
 			<div id="lyric">
-				
 			</div>
 			
 		</div>
@@ -227,24 +243,25 @@
 				<div id="volume-pointer"></div>
 			</div>
 			<div id="timeContainer">
-				<span id="currentTime">0000</span>
+				<span id="currentTime"></span>
 				<span>|</span>
-				<span id="totalTime">0000</span>
+				<span id="totalTime"></span>
 			</div>
 			<h1 id="title">
-				titel
+				
 			</h1>
 		</div>
 		<div id="channelList">
 			<ul>
 			</ul>
 		</div>
-		<audio src="" controls="true" style="position:absolute;z-index:999999;"></audio>
+		<audio src="" style="position:absolute;z-index:999999;"></audio>
 
 	</div>
 	<script type="text/javascript">
 
 		FMMusicPlayer = {
+			status : 'play',
 			channelList : '',
 			playingChannel : 'public_fengge_dianyingyuansheng',
 			init : function(node){
@@ -253,6 +270,7 @@
 				this.getSong()
 				this.play_pause()
 				var refreshProgress = setInterval(this.rendProgress.bind(this),1000)
+				this.changeProgress()
 			},
 			
 			//moduel
@@ -288,7 +306,6 @@
 						container.onclick = function(){
 							that.playingChannel = data.channels[i].channel_id
 							that.getSong()
-							console.log(data.channels[i])
 						}
 					}(i,tem))
 
@@ -317,6 +334,7 @@
 			},
 
 			getLyric : function(data){
+				var that = this
 				var xhr = new XMLHttpRequest()
 				xhr.open('GET','http://jirenguapi.applinzi.com/fm/getLyric.php?&sid='+data.song[0].sid,true)
 				xhr.send(null)
@@ -325,6 +343,7 @@
 						if (xhr.status === 200) {
 							(function(data){
 								data = JSON.parse(data)
+								that.analysisLyric(data)
 							}(xhr.response))
 						} else {
 							console.log(xhr.status)
@@ -333,14 +352,77 @@
 				}
 			},
 
-			status : 'play',
+			analysisLyric : function(data){
+				//analysis the lyric data
+				var lines = data.lyric.split("\n"),
+					pattern = /^\[\d{2}\:\d{2}\.\d{2}\]/
+				var lyricArr = []
+				lines.forEach(function (i) {
+					if (!pattern.test(i)) {              
+						lines.splice(i, 1)
+						return
+					}
+					var time = i.match(pattern)       
+					var lyric = i.split(time)
+					var seconds = time[0][1] * 600 + time[0][2] * 60 + time[0][4] * 10 + time[0][5] * 1
+					lyricArr.push([seconds, lyric[1]])
+				});
+				this.rendLyric(lyricArr)
+			},
+
+
+			rendLyric : function(lyricArr){
+				//rend the lyric
+				this.lyricArr = lyricArr
+				var tar = document.getElementById('lyric')
+				tar.innerHTML = ''
+				var i = 0
+				var oP
+				for (i in lyricArr){
+					oP = null
+					oP = document.createElement('p')
+					oP.innerText = lyricArr[i][1]
+					tar.appendChild(oP)
+				}
+				this.moveLyric(tar,lyricArr)
+				//lyric move
+			},
+
+			moveLyric : function(tar,lyricArr){
+				var i,j,newTop = 0
+				var currTime
+				var defalut = tar.offsetTop
+				var list = tar.getElementsByTagName('p')
+				clearInterval(timer)
+				tar.style.top = 170 + 'px'
+				var timer = setInterval(move,1000)
+				function move(){
+					currTime = Math.floor(document.getElementsByTagName('audio')[0].currentTime)
+					for (i = 0;i <= lyricArr.length - 1;i++){
+						if ( lyricArr[i][0] > currTime ){//defalut is 170
+							newTop = 0
+							for (j = 0;j < i;j++){
+								newTop += list[j].offsetHeight
+								console.log(j,list[j].offsetHeight,newTop)
+							}
+							tar.style.top = (170 - newTop) + 'px'
+							break;
+						}
+					//	console.log('going')
+					//	tar.style.top += list[i].offsetHeight
+					}
+				}
+			},
 
 			renderSong : function(data){
 				var tar = document.getElementsByTagName('audio')[0]
 				tar.src = data.song[0].url
 				tar.autoplay = true
 				tar.volume = 0.5
-				console.log(data.song[0].url)
+				var title = document.getElementsByTagName('h1')[0]
+				title.innerText = data.song[0].title
+				var background = document.getElementById('main-content')
+				background.style.backgroundImage = 'url(' + data.song[0].picture + ')'
 			},
 			
 			rendProgress:function(){
@@ -371,6 +453,15 @@
 				pointerProgress.style.left = Math.floor(backProgress.offsetWidth * per) + 'px'
 			},
 
+			changeProgress : function(){
+				var tar = document.getElementById('progressBar')
+				tar.addEventListener('mousedown',this.changeProgressProcessEvent(),false)
+			},
+
+			changeProgressProcessEvent : function(){
+			//	console.log('1')
+			},
+
 			play_pause : function(){
 				var that = this
 				var play = document.getElementById('play-pause')
@@ -382,11 +473,15 @@
 			play : function(){
 				document.getElementsByTagName('audio')[0].play()
 				this.status = 'play'
+				document.getElementById('play-pause').getElementsByTagName('i')[0].classList.remove('fa-pause')
+				document.getElementById('play-pause').getElementsByTagName('i')[0].classList.add('fa-play')
 			},
 
 			pause : function(){
 				document.getElementsByTagName('audio')[0].pause()
 				this.status = 'pause'
+				document.getElementById('play-pause').getElementsByTagName('i')[0].classList.remove('fa-play')
+				document.getElementById('play-pause').getElementsByTagName('i')[0].classList.add('fa-pause')
 			},
 
 			parseFormateMinute : function(time){
