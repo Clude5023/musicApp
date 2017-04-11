@@ -61,26 +61,27 @@
 				height:4px;
 				margin:0 auto;
 			}
-			#front{
+			#progress-front{
 				width:100px;
 				height:100%;
 				background-color:white;
 				position:absolute;
 				z-index:6;
 			}
-			#back{
+			#progress-back{
 				width:100%;
 				height:100%;
 				background-color:rgba(200,200,200,0.8);
 				position:absolute;
 				z-index:5;
 			}
-			#pointer{
+			#progress-pointer{
 				height:10px;
 				width:10px;
 				background-color:black;
 				position:absolute;
 				top:-2px;
+				left:0;
 				z-index:7;
 				border-radius:50%;
 			}
@@ -180,6 +181,7 @@
 				color:white;
 				font-weight:bold;
 			}
+			
 		</style>
 	</head>
 	<body>
@@ -193,13 +195,13 @@
 		</div>
 		<div id="control">
 			<div id="progressBar">
-				<div id="front">
+				<div id="progress-front">
 					
 				</div>
-				<div id="back">
+				<div id="progress-back">
 					
 				</div>
-				<div id="pointer">
+				<div id="progress-pointer">
 					
 				</div>
 			</div>
@@ -237,7 +239,7 @@
 			<ul>
 			</ul>
 		</div>
-		<audio src="" controls=true style="position:absolute;z-index:999999;"></audio>
+		<audio src="" controls="true" style="position:absolute;z-index:999999;"></audio>
 
 	</div>
 	<script type="text/javascript">
@@ -250,7 +252,7 @@
 				this.getChannel()
 				this.getSong()
 				this.play_pause()
-				
+				var refreshProgress = setInterval(this.rendProgress.bind(this),1000)
 			},
 			
 			//moduel
@@ -341,11 +343,32 @@
 				console.log(data.song[0].url)
 			},
 			
-			rendTime : function(){
-				var currTime
+			rendProgress:function(){
+				var tar = document.getElementsByTagName('audio')[0]
+				
+				//get current time and dom container
+				var currTime = Math.floor(tar.currentTime)
 				var currTimeContainer = document.getElementById('currentTime')
-				var totalTime
-				var totalTimeContainer
+				var totalTime = Math.floor(tar.duration)
+				var totalTimeContainer = document.getElementById('totalTime')
+
+				//get progress dom contaoner and now time
+				var per = currTime / totalTime 
+				var frontProgress = document.getElementById('progress-front')
+				var backProgress = document.getElementById('progress-back')
+				var pointerProgress = document.getElementById('progress-pointer')
+				
+
+				//rend time
+				currTime = this.parseFormateMinute(currTime)  //formate seconds=> minutes:seconds
+				totalTime = this.parseFormateMinute(totalTime)
+				
+				currTimeContainer.innerText = currTime
+				totalTimeContainer.innerText = totalTime
+
+				//rend progressbar and pointer
+				frontProgress.style.width = Math.floor(backProgress.offsetWidth * per) + 'px'
+				pointerProgress.style.left = Math.floor(backProgress.offsetWidth * per) + 'px'
 			},
 
 			play_pause : function(){
@@ -361,12 +384,26 @@
 				this.status = 'play'
 			},
 
-			pause:function(){
+			pause : function(){
 				document.getElementsByTagName('audio')[0].pause()
 				this.status = 'pause'
-			}
+			},
 
-		
+			parseFormateMinute : function(time){
+				var ret
+				var seconds
+				var seconds_0
+				var seconds_00
+				var minutes
+
+				minutes = Math.floor(time / 60)
+				seconds = Math.floor(time % 60)
+				seconds_0 = seconds % 10
+				seconds_00 = Math.floor(seconds / 10)
+
+				ret = minutes + ':' + seconds_00 + seconds_0
+				return ret
+			}
 		}
 		
 		FMMusicPlayer.init(document.getElementsByTagName('audio'))
